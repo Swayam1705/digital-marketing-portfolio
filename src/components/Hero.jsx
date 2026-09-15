@@ -17,27 +17,29 @@ export default function Hero() {
     <section id="home" className="hero grain" aria-labelledby="hero-heading">
       <div className="container hero__inner">
         <p className="eyebrow hero__eyebrow hero__anim hero__anim--1">
-          {role}
+          DIGITAL MARKETING STRATEGIST & CREATIVE
         </p>
 
         <h1
           id="hero-heading"
           className="hero__name hero__anim hero__anim--2"
         >
-          {name}
+          NAME
         </h1>
 
         <p className="hero__tagline hero__anim hero__anim--3">
           {accentWord ? (
             <>
-              {taglineStart} <em>{accentWord}</em>
+              {taglineStart} Turning raw attention into authentic connection & measurable growth.<em>{accentWord}</em>
             </>
           ) : (
             tagline
           )}
         </p>
 
-        <p className="hero__intro hero__anim hero__anim--4">{intro}</p>
+        <p className="hero__intro hero__anim hero__anim--4">
+          Passionate about content strategy, SEO, and consumer psychology. I help modern brands build cultural relevance, captivate audiences, and scale their digital footprint through data-backed storytelling.
+        </p>
 
         <div className="hero__actions hero__anim hero__anim--5">
           <button

@@ -1,0 +1,248 @@
+﻿
+/* ============================================================
+   GlobalImmersiveCanvas layering
+   ============================================================ */
+html, body {
+  background: #08090f;
+}
+
+.site-shell {
+  position: relative;
+  min-height: 100vh;
+}
+
+.global-immersive-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  display: block;
+}
+
+.page-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Sections should be transparent so the global canvas remains visible */
+.page-content > section,
+.page-content > footer {
+  background: transparent;
+  position: relative;
+  z-index: 1;
+}
+
+/* Reduced motion: keep canvas but freeze */
+@media (prefers-reduced-motion: reduce) {
+  .global-immersive-canvas {
+    opacity: 0.5;
+  }
+}
+
+/* Ensure hero doesn't cover the global canvas */
+.hero, .hero-section, #hero, section#hero {
+  background: transparent !important;
+}
+
+/* ============================================================
+   Global Continuous Canvas & Layering
+   ============================================================ */
+:root {
+  --canvas-bg: #070913;
+}
+
+html, body {
+  background-color: var(--canvas-bg) !important;
+  color: #f1f5f9;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.site-shell {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.global-immersive-canvas {
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  display: block;
+}
+
+.page-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+/* Make sure all sections remain transparent so the background animation is continuous */
+.page-content section,
+.page-content > div,
+.page-content footer,
+section {
+  background-color: transparent !important;
+  background-image: none;
+  position: relative;
+  z-index: 2;
+}
+
+/* Keep interactive elements clickable */
+nav, a, button, input, textarea, select, .interactive, [role="button"] {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .global-immersive-canvas {
+    opacity: 0.4;
+  }
+}
+
+/* ============================================================
+   Global Full-Page Immersive Canvas Styling
+   ============================================================ */
+:root {
+  --canvas-bg: #070913;
+}
+
+html, body {
+  background-color: var(--canvas-bg) !important;
+  color: #f1f5f9;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.site-shell {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.global-immersive-canvas {
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  display: block;
+}
+
+.page-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+/* Ensure all sections remain transparent so the background animation flows continuously */
+.page-content section,
+.page-content > div,
+.page-content footer,
+section {
+  background-color: transparent !important;
+  background-image: none;
+  position: relative;
+  z-index: 2;
+}
+
+/* Maintain accessibility for interactive elements */
+nav, a, button, input, textarea, select, .interactive, [role="button"] {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Prefers-reduced-motion fallback */
+@media (prefers-reduced-motion: reduce) {
+  .global-immersive-canvas {
+    opacity: 0.4;
+  }
+}
+
+/* ============================================================
+   Unified Global Canvas Layering Rules
+   ============================================================ */
+:root {
+  --app-bg: #070913;
+}
+
+html, body {
+  background-color: var(--app-bg) !important;
+  color: #f8fafc;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.site-shell {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.global-immersive-canvas {
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+  display: block;
+}
+
+.page-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+/* Ensure all sub-sections are transparent so the canvas remains visible */
+.page-content section,
+.page-content > div,
+.page-content footer,
+section,
+#hero,
+#about,
+#beliefs,
+#skills,
+#projects,
+#funnel,
+#experience,
+#services,
+#blog,
+#contact {
+  background-color: transparent !important;
+  background-image: none !important;
+  position: relative;
+  z-index: 2;
+}
+
+/* Ensure buttons, links, forms, and cursor interactives remain clickable */
+a, button, input, textarea, select, nav, .interactive, [role="button"] {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .global-immersive-canvas {
+    opacity: 0.45;
+  }
+}

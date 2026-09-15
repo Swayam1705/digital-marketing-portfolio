@@ -1,0 +1,335 @@
+﻿:root {
+  --paper: #f2ede4;
+  --ink: #141210;
+  --ember: #ff5a1f;
+  --rule: rgba(20, 18, 16, 0.15);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0; padding: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "Inter", sans-serif;
+  overflow-x: hidden;
+  width: 100vw;
+}
+
+/* Global Canvas */
+.global-immersive-canvas {
+  position: fixed !important;
+  top: 0 !important; left: 0 !important;
+  width: 100vw !important; height: 100vh !important;
+  z-index: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Content Container */
+.immersive-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* ============================================================
+   THE CSS LOCK: Kills old overlapping code
+   ============================================================ */
+.chapter {
+  position: relative;
+  width: 100%;
+  max-width: 100vw;
+  min-height: auto;
+  padding: 120px 5vw;
+  border-bottom: 1px solid var(--rule);
+  background: transparent !important;
+  display: block !important; /* kills weird grid/flex layouts from root level */
+  isolation: isolate; /* prevents z-index bleeding */
+}
+
+/* Strip backgrounds, force relative positioning on inner elements */
+.chapter * {
+  background: transparent !important;
+  position: relative; 
+}
+.chapter img, .chapter video { background: initial !important; max-width: 100%; height: auto; }
+
+.chapter-marker {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 40px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+}
+.chapter-num { color: var(--ember); font-weight: 700; }
+.chapter-line { width: 40px; height: 1px; background: var(--ink); opacity: 0.3; }
+
+/* ============================================================
+   CLEAN TOP NAVBAR (Responsive)
+   ============================================================ */
+.clean-top-nav {
+  position: fixed !important;
+  top: 0; left: 0; right: 0; height: 70px;
+  z-index: 999;
+  background: rgba(242, 237, 228, 0.9) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--rule);
+  padding: 0 5vw;
+  display: flex; align-items: center; justify-content: space-between;
+}
+
+.nav-logo {
+  font-family: "JetBrains Mono", monospace; font-weight: 700;
+  color: var(--ink) !important; text-decoration: none;
+  font-size: 14px; letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.nav-menu {
+  display: flex; gap: 24px;
+}
+
+.nav-menu a {
+  font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--ink) !important; text-decoration: none; transition: color 0.2s;
+  white-space: nowrap;
+}
+.nav-menu a:hover { color: var(--ember) !important; }
+
+/* Kill the old sidebar universally */
+aside, .sidebar, .left-nav, [class*="sidebar"], [class*="Sidebar"] {
+  display: none !important; width: 0 !important; height: 0 !important; overflow: hidden !important;
+}
+
+/* ============================================================
+   TYPOGRAPHY & ELEMENTS
+   ============================================================ */
+.chapter h1, .chapter h2, .chapter h3 {
+  font-family: "Fraunces", serif; color: var(--ink) !important; margin-top: 0;
+}
+.chapter h1 { font-size: clamp(2.5rem, 6vw, 5rem); line-height: 1; letter-spacing: -0.03em; }
+.chapter h2 { font-size: clamp(2rem, 4vw, 3.5rem); }
+.chapter p { color: rgba(20, 18, 16, 0.75) !important; font-size: 1.1rem; line-height: 1.6; max-width: 700px; }
+
+.chapter [class*="card"], .chapter [class*="box"] {
+  border: 1px solid var(--rule) !important; border-radius: 8px; padding: 24px;
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+.chapter a[class*="btn"], .chapter button {
+  background: var(--ink) !important; color: var(--paper) !important;
+  border-radius: 40px; padding: 12px 24px; border: none; font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; cursor: pointer;
+}
+
+/* ============================================================
+   MOBILE FIXES
+   ============================================================ */
+@media (max-width: 768px) {
+  /* Scrollable nav row on mobile */
+  .clean-top-nav { padding-right: 0; }
+  .nav-menu {
+    overflow-x: auto; padding-right: 5vw; padding-left: 20px;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  }
+  .nav-menu::-webkit-scrollbar { display: none; }
+  
+  .chapter { padding: 90px 5vw 60px; } /* Prevent nav overlap on mobile */
+}
+
+/* ============================================================
+   NAVBAR — centered, balanced, animated
+   ============================================================ */
+.clean-top-nav {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  z-index: 1000;
+  display: flex !important;
+  align-items: center;
+  justify-content: center; /* centers the inner container */
+  padding: 0;
+  background: rgba(242, 237, 228, 0.72) !important;
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  border-bottom: 1px solid transparent;
+  transform: translateY(-18px);
+  opacity: 0;
+  transition:
+    transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.55s ease,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.clean-top-nav.is-ready {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.clean-top-nav.is-scrolled {
+  background: rgba(242, 237, 228, 0.92) !important;
+  border-bottom-color: rgba(20, 18, 16, 0.1);
+  box-shadow: 0 8px 30px rgba(20, 18, 16, 0.06);
+}
+
+.clean-top-nav .nav-container {
+  width: 100%;
+  max-width: 1200px;          /* keeps content centered, not stuck left */
+  margin: 0 auto;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* Logo */
+.clean-top-nav .nav-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none !important;
+  color: #141210 !important;
+  border: none !important;
+  flex-shrink: 0;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease, color 0.2s ease;
+}
+.clean-top-nav.is-ready .nav-logo {
+  transform: translateY(0);
+  opacity: 1;
+  transition-delay: 80ms;
+}
+.clean-top-nav .logo-mark {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: #ff5a1f;
+  box-shadow: 0 0 0 0 rgba(255, 90, 31, 0.4);
+  animation: logoPulse 2.8s ease-in-out infinite;
+}
+@keyframes logoPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 90, 31, 0.0); transform: scale(1); }
+  50% { box-shadow: 0 0 0 6px rgba(255, 90, 31, 0.12); transform: scale(1.05); }
+}
+.clean-top-nav .logo-text {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.clean-top-nav .nav-logo:hover { color: #ff5a1f !important; }
+
+/* Menu */
+.clean-top-nav .nav-menu {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow: visible;
+}
+
+.clean-top-nav .nav-menu a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  font-family: "Inter", sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(20, 18, 16, 0.72) !important;
+  text-decoration: none !important;
+  border: none !important;
+  border-radius: 999px;
+  white-space: nowrap;
+  transform: translateY(10px);
+  opacity: 0;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    opacity 0.45s ease;
+}
+.clean-top-nav.is-ready .nav-menu a {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* underline draw animation */
+.clean-top-nav .nav-menu a::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 5px;
+  height: 1.5px;
+  background: #ff5a1f;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s ease;
+  border-radius: 2px;
+}
+
+.clean-top-nav .nav-menu a:hover {
+  color: #141210 !important;
+  background: rgba(20, 18, 16, 0.04);
+}
+.clean-top-nav .nav-menu a:hover::after,
+.clean-top-nav .nav-menu a.is-active::after {
+  transform: scaleX(1);
+}
+.clean-top-nav .nav-menu a.is-active {
+  color: #141210 !important;
+}
+
+/* Mobile: balanced + scrollable links, still centered shell */
+@media (max-width: 900px) {
+  .clean-top-nav { height: 64px; }
+  .clean-top-nav .nav-container {
+    max-width: 100%;
+    padding: 0 16px 0 18px;
+    gap: 14px;
+  }
+  .clean-top-nav .logo-text {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+  }
+  .clean-top-nav .nav-menu {
+    flex: 1;
+    justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    mask-image: linear-gradient(90deg, #000 85%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+    padding-right: 8px;
+  }
+  .clean-top-nav .nav-menu::-webkit-scrollbar { display: none; }
+  .clean-top-nav .nav-menu a {
+    padding: 8px 10px;
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clean-top-nav,
+  .clean-top-nav .nav-logo,
+  .clean-top-nav .nav-menu a,
+  .clean-top-nav .logo-mark {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
