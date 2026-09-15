@@ -1,0 +1,207 @@
+/* =============================================================================
+   ANIMATIONS — motion is used sparingly and always respects reduced-motion.
+   Section reveals are toggled by the <Reveal> component (IntersectionObserver)
+   via the `.is-visible` class.
+   ============================================================================= */
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes scroll-dot {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 0);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 14px);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-14px);
+  }
+}
+
+@keyframes grow-bar-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ----------------------------- Reveal system ------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Variant: reveal from the left / right */
+.reveal--left {
+  transform: translateX(-40px);
+}
+.reveal--right {
+  transform: translateX(40px);
+}
+.reveal--left.is-visible,
+.reveal--right.is-visible {
+  transform: translateX(0);
+}
+
+/* Variant: scale in (cards, media) */
+.reveal--scale {
+  transform: scale(0.94);
+}
+.reveal--scale.is-visible {
+  transform: scale(1);
+}
+
+/* Hero text reveals run on load (no scroll needed) */
+.hero__anim {
+  opacity: 0;
+  animation: fade-up 0.9s var(--ease-out) forwards;
+}
+.hero__anim--1 {
+  animation-delay: 0.05s;
+}
+.hero__anim--2 {
+  animation-delay: 0.18s;
+}
+.hero__anim--3 {
+  animation-delay: 0.32s;
+}
+.hero__anim--4 {
+  animation-delay: 0.46s;
+}
+.hero__anim--5 {
+  animation-delay: 0.6s;
+}
+
+/* Gentle float for the hero decorative card */
+.hero__visual {
+  animation: float-y 9s ease-in-out infinite;
+}
+
+/* Funnel bars animate in when the section is revealed.
+   The component adds `.funnel__wrap.is-visible`. */
+.funnel__bar {
+  transform: scaleX(0);
+  transition: transform 1s var(--ease-out);
+}
+.funnel__wrap.is-visible .funnel__bar {
+  transform: scaleX(1);
+}
+.funnel__wrap.is-visible .funnel__row:nth-child(1) .funnel__bar {
+  transition-delay: 0.05s;
+}
+.funnel__wrap.is-visible .funnel__row:nth-child(2) .funnel__bar {
+  transition-delay: 0.18s;
+}
+.funnel__wrap.is-visible .funnel__row:nth-child(3) .funnel__bar {
+  transition-delay: 0.31s;
+}
+.funnel__wrap.is-visible .funnel__row:nth-child(4) .funnel__bar {
+  transition-delay: 0.44s;
+}
+
+/* Horizontal reveals stack vertically on narrow screens so the translate
+   never spills outside the viewport (this file loads after globals.css, so
+   the override must live here to win the cascade). */
+@media (max-width: 860px) {
+  .reveal--left,
+  .reveal--right {
+    transform: translateY(30px);
+  }
+  .reveal--left.is-visible,
+  .reveal--right.is-visible {
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------- Reduced motion ------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .hero__anim {
+    opacity: 1;
+    animation: none;
+  }
+
+  .hero__visual {
+    animation: none;
+  }
+
+  .funnel__bar {
+    transform: scaleX(1);
+  }
+
+  .scroll-cue__mouse::after {
+    animation: none;
+    opacity: 1;
+  }
+}

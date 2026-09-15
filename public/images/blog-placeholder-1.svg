@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-label="Placeholder blog article illustration: notebook and idea spark">
+  <defs>
+    <linearGradient id="b1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#633ef2"/>
+      <stop offset="1" stop-color="#2b1d5e"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="750" fill="url(#b1)"/>
+  <circle cx="980" cy="120" r="220" fill="#ff7a66" opacity="0.22"/>
+  <circle cx="180" cy="660" r="200" fill="#8b6cff" opacity="0.35"/>
+
+  <!-- notebook -->
+  <g transform="translate(300 150) rotate(-6 300 240)">
+    <rect x="60" y="40" width="480" height="380" rx="22" fill="#f7f4f0"/>
+    <rect x="60" y="40" width="480" height="70" rx="22" fill="#ffd9c8"/>
+    <rect x="100" y="160" width="300" height="18" rx="9" fill="#b9a8f5"/>
+    <rect x="100" y="205" width="360" height="14" rx="7" fill="#d8d2ea"/>
+    <rect x="100" y="240" width="340" height="14" rx="7" fill="#d8d2ea"/>
+    <rect x="100" y="275" width="240" height="14" rx="7" fill="#d8d2ea"/>
+  </g>
+  <!-- lightbulb spark -->
+  <g transform="translate(830 250)">
+    <path d="M60 0 C20 0 0 34 0 64 C0 90 18 104 30 120 L90 120 C102 104 120 90 120 64 C120 34 100 0 60 0 Z" fill="#ffd9c8"/>
+    <rect x="34" y="128" width="52" height="16" rx="8" fill="#ff9b85"/>
+    <path d="M60 -34 V-10 M6 10 L24 24 M114 10 L96 24" stroke="#cdbffb" stroke-width="8" stroke-linecap="round"/>
+  </g>
+
+  <rect x="390" y="640" width="420" height="52" rx="26" fill="#171326" opacity="0.8"/>
+  <text x="600" y="674" text-anchor="middle" font-family="'Space Grotesk', Arial, sans-serif"
+        font-size="22" font-weight="600" letter-spacing="3" fill="#f7f4f0">ARTICLE PLACEHOLDER 01</text>
+</svg>

@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" width="1200" height="750" role="img" aria-label="Placeholder blog article illustration: research magnifier over a chart">
+  <defs>
+    <linearGradient id="b2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff3ec"/>
+      <stop offset="1" stop-color="#e4dafb"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="750" fill="url(#b2)"/>
+  <circle cx="1030" cy="640" r="220" fill="#ff7a66" opacity="0.16"/>
+
+  <!-- chart card -->
+  <g transform="translate(260 150)">
+    <rect x="0" y="0" width="620" height="420" rx="28" fill="#ffffff" stroke="#d9d0f7" stroke-width="3"/>
+    <path d="M80 330 L220 250 L340 290 L480 150 L560 190" fill="none" stroke="#633ef2" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+    <g fill="#8b6cff">
+      <circle cx="80" cy="330" r="12"/><circle cx="220" cy="250" r="12"/><circle cx="340" cy="290" r="12"/><circle cx="480" cy="150" r="12" fill="#ff6f5e"/><circle cx="560" cy="190" r="12"/>
+    </g>
+    <rect x="80" y="60" width="180" height="18" rx="9" fill="#cdbffb"/>
+  </g>
+  <!-- magnifier -->
+  <g transform="translate(720 250) rotate(20)">
+    <circle cx="110" cy="110" r="96" fill="none" stroke="#171326" stroke-width="22"/>
+    <line x1="182" y1="182" x2="300" y2="300" stroke="#171326" stroke-width="26" stroke-linecap="round"/>
+    <circle cx="110" cy="110" r="80" fill="#ffffff" opacity="0.35"/>
+  </g>
+
+  <rect x="390" y="640" width="420" height="52" rx="26" fill="#171326" opacity="0.8"/>
+  <text x="600" y="674" text-anchor="middle" font-family="'Space Grotesk', Arial, sans-serif"
+        font-size="22" font-weight="600" letter-spacing="3" fill="#f7f4f0">ARTICLE PLACEHOLDER 02</text>
+</svg>
