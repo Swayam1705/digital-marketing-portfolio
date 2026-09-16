@@ -1,4 +1,5 @@
 ﻿import React, { useEffect, useState } from "react";
+import { portfolioData } from "../data/portfolioData";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -15,13 +16,11 @@ export default function Navbar() {
   ];
 
   useEffect(() => {
-    // entrance animation
     const t = setTimeout(() => setReady(true), 80);
 
     const onScroll = () => {
       setScrolled(window.scrollY > 24);
 
-      // active section highlight
       const ids = ["hero", "about", "skills", "projects", "experience", "services", "contact"];
       let current = "hero";
       for (const id of ids) {
@@ -56,7 +55,7 @@ export default function Navbar() {
           onClick={(e) => handleScroll(e, "#hero")}
         >
           <span className="logo-mark" aria-hidden="true" />
-          <span className="logo-text">[YOUR NAME]</span>
+          <span className="logo-text">{portfolioData.name}</span>
         </a>
 
         <nav className="nav-menu" aria-label="Primary">
