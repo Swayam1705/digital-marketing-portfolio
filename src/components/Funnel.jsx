@@ -1,88 +1,88 @@
-import { useEffect, useRef, useState } from "react";
-import { Info } from "lucide-react";
-import { portfolioData } from "../data/portfolioData.js";
-import Reveal from "./Reveal.jsx";
-import SectionHeading from "./SectionHeading.jsx";
+﻿import React, { useEffect, useRef, useState } from "react";
 
-/* Widths make the bars read as a funnel without faking any numbers. */
-const BAR_WIDTHS = ["100%", "82%", "64%", "48%"];
+function Counter({ target, symbol = "", suffix = "" }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
 
-export default function Funnel() {
-  const wrapRef = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  // Trigger the animated bars once they enter the viewport.
   useEffect(() => {
-    const node = wrapRef.current;
-    if (!node || !("IntersectionObserver" in window)) {
-      setVisible(true);
-      return;
-    }
-    const obs = new IntersectionObserver(
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            setVisible(true);
-            obs.unobserve(e.target);
-          }
-        });
+        if (entries[0].isIntersecting) {
+          let start = 0;
+          const end = parseFloat(target);
+          const duration = 1600; // ms
+          const stepTime = 20;
+          const steps = duration / stepTime;
+          const increment = end / steps;
+
+          const timer = setInterval(() => {
+            start += increment;
+            if (start >= end) {
+              setCount(end);
+              clearInterval(timer);
+            } else {
+              setCount(start);
+            }
+          }, stepTime);
+
+          observer.disconnect();
+        }
       },
       { threshold: 0.3 }
     );
-    obs.observe(node);
-    return () => obs.disconnect();
-  }, []);
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target]);
 
   return (
-    <section
-      id="performance"
-      className="section section--tint"
-      aria-labelledby="performance-title"
-    >
-      <div className="container">
-        <SectionHeading
-          eyebrow="Performance"
-          center
-          title={<span id="performance-title">How I think about performance.</span>}
-          intro="Numbers belong to real campaigns — so instead of fake statistics, here is the funnel I use to decide which numbers are worth measuring."
-        />
+    <span ref={ref} className="count-num">
+      {symbol}
+      {Number.isInteger(target) ? Math.floor(count) : count.toFixed(1)}
+      {suffix}
+    </span>
+  );
+}
 
-        <Reveal>
-        <div
-          ref={wrapRef}
-          className={`funnel__wrap ${visible ? "is-visible" : ""}`}
-        >
-          <div className="funnel" role="list" aria-label="Marketing funnel stages">
-            {portfolioData.funnel.map((row, i) => (
-              <div className="funnel__row" role="listitem" key={row.stage}>
-                <div className="funnel__label">
-                  <span className="funnel__stage">{row.stage}</span>
-                  <span className="funnel__question">{row.question}</span>
-                  {/* Signals live in the label column so they never clip
-                      inside the shrinking funnel bars. */}
-                  <span className="funnel__signals">{row.signals}</span>
-                </div>
-                <div
-                  className="funnel__bar"
-                  style={{ "--w": BAR_WIDTHS[i] }}
-                >
-                  <span className="funnel__metric">{row.metric}</span>
-                </div>
-              </div>
-            ))}
-          </div>
+export default function Funnel() {
+  return (
+    <section className="funnel-section">
+      <div className="funnel-intro">
+        <h2>Performance Telemetry</h2>
+        <p>Data-backed marketing execution across every phase of the conversion funnel.</p>
+      </div>
 
-          <p className="funnel__note">
-            <Info aria-hidden="true" />
-            <span>
-              The dashed <strong>[ADD … METRIC]</strong> pills are deliberate
-              placeholders. When you run a real campaign, replace them in{" "}
-              <code>src/data/portfolioData.js</code> with numbers you can source
-              and stand behind — never estimate.
-            </span>
-          </p>
+      <div className="telemetry-grid">
+        <div className="telemetry-card">
+          <span className="stage-tag">STAGE 01 — AWARENESS</span>
+          <h3><Counter target={3.8} suffix="M+" /></h3>
+          <p className="metric-name">Cross-Platform Organic Reach</p>
+          <p className="metric-detail">Optimized creative hooks & audience targeting algorithms.</p>
         </div>
-        </Reveal>
+
+        <div className="telemetry-card">
+          <span className="stage-tag">STAGE 02 — ENGAGEMENT</span>
+          <h3><Counter target={14.8} symbol="+" suffix="%" /></h3>
+          <p className="metric-name">Average Engagement Rate</p>
+          <p className="metric-detail">Interactive content frameworks & community building.</p>
+        </div>
+
+        <div className="telemetry-card">
+          <span className="stage-tag">STAGE 03 — CONVERSION</span>
+          <h3><Counter target={4.2} suffix="x" /></h3>
+          <p className="metric-name">Average ROAS Scaled</p>
+          <p className="metric-detail">Paid ad retargeting & high-converting landing pages.</p>
+        </div>
+
+        <div className="telemetry-card">
+          <span className="stage-tag">STAGE 04 — RETENTION</span>
+          <h3><Counter target={38} suffix="%" /></h3>
+          <p className="metric-name">Repeat Purchase Rate</p>
+          <p className="metric-detail">Automated email sequences & brand loyalty campaigns.</p>
+        </div>
       </div>
     </section>
   );

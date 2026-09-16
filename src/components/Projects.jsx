@@ -1,195 +1,95 @@
-import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, X, ExternalLink, CheckCircle2 } from "lucide-react";
-import { portfolioData } from "../data/portfolioData.js";
-import Reveal from "./Reveal.jsx";
-import SectionHeading from "./SectionHeading.jsx";
+﻿import React, { useState } from "react";
+import ProjectModal from "./ProjectModal";
 
-/* ----------------------------- Case study modal ---------------------------- */
-function ProjectModal({ project, index, onClose }) {
-  const panelRef = useRef(null);
-  const closeRef = useRef(null);
-  const previousFocus = useRef(null);
+const defaultProjects = [
+  {
+    id: 1,
+    title: "Viral TikTok & Reels Growth Engine",
+    category: "Organic Growth & Content",
+    description: "Designed a short-form video content strategy generating multi-million organic impressions.",
+    objective: "Increase brand reach among Gen-Z demographics without paid ad spend.",
+    approach: "Utilized psychological hooks, trending audio patterns, and community comment bait.",
+    metrics: [
+      { value: "3.2M+", label: "Organic Impressions" },
+      { value: "+180%", label: "Follower Growth" },
+      { value: "8.4%", label: "Avg Engagement" }
+    ],
+    tools: ["TikTok Ads Manager", "CapCut", "Google Analytics 4", "Notion"],
+    outcome: "Generated 3.2M organic views in 60 days, driving a 28% increase in website landing traffic."
+  },
+  {
+    id: 2,
+    title: "Omnichannel Funnel & ROAS Optimization",
+    category: "Performance Marketing",
+    description: "A complete overhaul of Meta & Google Search ad campaigns for an e-commerce brand.",
+    objective: "Lower Customer Acquisition Cost (CAC) while scaling monthly ad spend.",
+    approach: "A/B tested creative variations, implemented dynamic retargeting, and built custom landing pages.",
+    metrics: [
+      { value: "4.2x", label: "Return on Ad Spend" },
+      { value: "-32%", label: "Customer Acquisition Cost" },
+      { value: "+145%", label: "Conversion Rate" }
+    ],
+    tools: ["Meta Ads Manager", "Google Ads", "Shopify", "Klaviyo"],
+    outcome: "Achieved a 4.2x ROAS over 90 days while scaling monthly ad spend by 200%."
+  },
+  {
+    id: 3,
+    title: "SEO Content Architecture & Authority Building",
+    category: "Search Engine Optimization",
+    description: "Built a topic cluster SEO framework to capture high-intent search queries.",
+    objective: "Outrank entrenched competitors on key high-volume commercial keywords.",
+    approach: "Executed technical site audits, programmatic internal linking, and strategic guest outreach.",
+    metrics: [
+      { value: "#1", label: "Google Rank for Core Terms" },
+      { value: "+210%", label: "Organic Search Traffic" },
+      { value: "14.2k", label: "Monthly Organic Clicks" }
+    ],
+    tools: ["Ahrefs", "SEMrush", "Google Search Console", "WordPress"],
+    outcome: "Secured top-3 rankings for 14 high-converting keywords within 5 months."
+  }
+];
 
-  useEffect(() => {
-    previousFocus.current = document.activeElement;
-    closeRef.current?.focus();
-    document.body.style.overflow = "hidden";
-
-    const onKeyDown = (e) => {
-      if (e.key === "Escape") {
-        onClose();
-        return;
-      }
-      // Simple focus trap
-      if (e.key === "Tab" && panelRef.current) {
-        const focusables = panelRef.current.querySelectorAll(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-        );
-        if (focusables.length === 0) return;
-        const first = focusables[0];
-        const last = focusables[focusables.length - 1];
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault();
-          last.focus();
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault();
-          first.focus();
-        }
-      }
-    };
-
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = "";
-      previousFocus.current?.focus?.();
-    };
-  }, [onClose]);
-
-  return (
-    <div
-      className="modal"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="modal-title"
-      onMouseDown={(e) => {
-        // Click on the backdrop (not the panel) closes the modal.
-        if (e.target === e.currentTarget) onClose();
-      }}
-    >
-      <div className="modal__backdrop" onClick={onClose} aria-hidden="true" />
-
-      <div className="modal__panel" ref={panelRef} tabIndex={-1}>
-        <button
-          ref={closeRef}
-          className="modal__close"
-          onClick={onClose}
-          aria-label="Close case study"
-        >
-          <X aria-hidden="true" />
-        </button>
-
-        <div className="modal__media">
-          <img src={project.image} alt={project.alt} />
-        </div>
-
-        <div className="modal__body">
-          <span className="modal__chip">{project.category}</span>
-          <h3 id="modal-title" className="modal__title">
-            {project.title}
-          </h3>
-
-          <div className="modal__sections">
-            <div>
-              <p className="modal__label">OBJECTIVE</p>
-              <p className="modal__text">{project.objective}</p>
-            </div>
-            <div>
-              <p className="modal__label">APPROACH</p>
-              <p className="modal__text">{project.approach}</p>
-            </div>
-            <div>
-              <p className="modal__label">TOOLS</p>
-              <ul className="modal__tools" aria-label="Tools used">
-                {project.tools.map((tool) => (
-                  <li key={tool} className="modal__tool">
-                    {tool}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <p className="modal__label">OUTCOME / LEARNING</p>
-              <p className="modal__text" style={{ display: "flex", gap: "0.6rem" }}>
-                <CheckCircle2
-                  aria-hidden="true"
-                  style={{
-                    width: 20,
-                    height: 20,
-                    flex: "none",
-                    marginTop: 3,
-                    color: "var(--color-violet)",
-                  }}
-                />
-                <span>{project.outcome}</span>
-              </p>
-            </div>
-          </div>
-
-          <div className="modal__foot">
-            {project.link && project.link !== "#" && (
-              <a
-                className="btn btn-primary"
-                href={project.link}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                {project.linkLabel || "View project"}
-                <ExternalLink aria-hidden="true" />
-              </a>
-            )}
-            <button className="btn btn-ghost btn-sm" onClick={onClose}>
-              Close
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* -------------------------------- Section ---------------------------------- */
 export default function Projects() {
-  const [active, setActive] = useState(null); // active project index
+  const [selectedProject, setSelectedProject] = useState(null);
 
   return (
-    <section id="work" className="section projects" aria-labelledby="work-title">
-      <div className="container">
-        <SectionHeading
-          eyebrow="Selected work"
-          dark
-          title={
-            <span id="work-title">Ideas I&rsquo;ve turned into experiments.</span>
-          }
-          intro="Coursework, self-initiated campaigns and hands-on tests. Each case study covers the objective, the approach and what I actually learned."
-        />
-
-        <div className="projects__grid">
-          {portfolioData.projects.map((project, i) => (
-            <Reveal
-              key={`${project.title}-${i}`}
-              delay={i * 110}
-              variant="scale"
-            >
-              <button
-                className="project-card"
-                onClick={() => setActive(i)}
-                aria-haspopup="dialog"
-                aria-label={`Open case study: ${project.title}`}
-              >
-                <div className="project-card__media">
-                  <img src={project.image} alt={project.alt} loading="lazy" />
-                  <span className="project-card__chip">{project.category}</span>
-                </div>
-                <div className="project-card__body">
-                  <h3 className="project-card__title">{project.title}</h3>
-                  <p className="project-card__objective">{project.objective}</p>
-                  <span className="project-card__cta">
-                    View case study
-                    <ArrowUpRight aria-hidden="true" />
-                  </span>
-                </div>
-              </button>
-            </Reveal>
-          ))}
-        </div>
+    <section className="projects-section">
+      <div className="projects-header">
+        <h2 className="projects-title">Featured Campaigns</h2>
+        <p className="projects-subtitle">Click any project to inspect the strategy, metrics & marketing stack.</p>
       </div>
 
-      {active !== null && (
-        <ProjectModal
-          project={portfolioData.projects[active]}
-          index={active}
-          onClose={() => setActive(null)}
+      <div className="projects-grid">
+        {defaultProjects.map((project) => (
+          <div 
+            key={project.id} 
+            className="project-card"
+            onClick={() => setSelectedProject(project)}
+            data-cursor="VIEW"
+          >
+            <div className="project-card-top">
+              <span className="project-cat">{project.category}</span>
+              <span className="project-arrow">↗</span>
+            </div>
+            
+            <h3 className="project-name">{project.title}</h3>
+            <p className="project-desc">{project.description}</p>
+
+            {project.metrics && (
+              <div className="project-card-metrics">
+                <span className="card-stat-num">{project.metrics[0].value}</span>
+                <span className="card-stat-lbl">{project.metrics[0].label}</span>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Case Study Slide-over Modal */}
+      {selectedProject && (
+        <ProjectModal 
+          project={selectedProject} 
+          onClose={() => setSelectedProject(null)} 
         />
       )}
     </section>

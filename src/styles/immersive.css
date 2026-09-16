@@ -417,3 +417,431 @@ aside, .sidebar, .left-nav, [class*="sidebar"], [class*="Sidebar"] {
     padding: 6px 10px !important;
   }
 }
+
+/* ============================================================
+   UPGRADES: Status Badge, Project Modals & Telemetry Grid
+   ============================================================ */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(20, 18, 16, 0.04);
+  border: 1px solid rgba(20, 18, 16, 0.1);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981; /* Emerald green */
+  box-shadow: 0 0 8px #10b981;
+}
+
+.status-text { font-weight: 600; color: var(--ink); }
+.status-divider { color: var(--ink-mute); }
+.status-time { color: var(--ember); font-weight: 600; }
+
+/* Case Study Cards */
+.projects-header { margin-bottom: 40px; }
+.projects-title { font-size: clamp(2rem, 4vw, 3.5rem); margin-bottom: 10px; }
+.projects-subtitle { color: var(--ink-dim); font-size: 1.1rem; }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.project-card {
+  border: 1px solid var(--rule) !important;
+  border-radius: 8px !important;
+  padding: 32px !important;
+  background: rgba(242, 237, 228, 0.6) !important;
+  backdrop-filter: blur(8px);
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) !important;
+}
+
+.project-card:hover {
+  border-color: var(--ember) !important;
+  transform: translateY(-6px) !important;
+  box-shadow: 0 20px 40px rgba(20, 18, 16, 0.08);
+}
+
+.project-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.project-cat {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ember);
+  font-weight: 600;
+}
+
+.project-arrow {
+  font-size: 20px;
+  color: var(--ink-mute);
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+.project-card:hover .project-arrow {
+  transform: translate(4px, -4px);
+  color: var(--ember);
+}
+
+.project-name { font-size: 1.6rem !important; margin-bottom: 12px !important; }
+.project-desc { font-size: 1rem !important; line-height: 1.5 !important; margin-bottom: 24px !important; }
+
+.project-card-metrics {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-stat-num {
+  font-family: "Fraunces", serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.card-stat-lbl {
+  font-size: 12px;
+  color: var(--ink-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Modal Drawer */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(20, 18, 16, 0.6);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: flex-end;
+}
+
+.modal-drawer {
+  width: 100%;
+  max-width: 650px;
+  height: 100vh;
+  background: var(--paper);
+  padding: 60px 48px;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.2);
+  animation: drawerSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes drawerSlide {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: transparent !important;
+  border: 1px solid var(--rule) !important;
+  color: var(--ink) !important;
+  padding: 8px 16px !important;
+  border-radius: 999px !important;
+  font-family: "JetBrains Mono", monospace !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+}
+
+.modal-category {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  color: var(--ember);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.modal-title { font-size: 2.5rem !important; margin: 12px 0 32px 0 !important; }
+
+.modal-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.metric-badge {
+  background: rgba(20, 18, 16, 0.04);
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid var(--rule);
+}
+
+.metric-value { font-family: "Fraunces", serif; font-size: 1.5rem; font-weight: 700; display: block; }
+.metric-label { font-size: 11px; color: var(--ink-dim); text-transform: uppercase; }
+
+.modal-section { margin-bottom: 32px; }
+.modal-section h3 { font-size: 1.2rem !important; margin-bottom: 12px !important; }
+
+.modal-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.tool-tag {
+  background: rgba(20, 18, 16, 0.08);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.outcome-box {
+  background: rgba(255, 90, 31, 0.08);
+  border: 1px solid var(--ember);
+  padding: 24px;
+  border-radius: 8px;
+}
+
+/* Telemetry Grid */
+.telemetry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.telemetry-card {
+  border: 1px solid var(--rule);
+  padding: 32px;
+  border-radius: 8px;
+  background: rgba(242, 237, 228, 0.4);
+}
+
+.stage-tag {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  color: var(--ember);
+  letter-spacing: 0.18em;
+  font-weight: 700;
+}
+
+.telemetry-card h3 {
+  font-family: "Fraunces", serif;
+  font-size: 3rem;
+  margin: 12px 0 8px 0;
+}
+
+.metric-name { font-weight: 600; font-size: 1.1rem; margin-bottom: 6px; }
+.metric-detail { font-size: 0.95rem; color: var(--ink-dim); }
+
+@media (max-width: 768px) {
+  .status-badge { display: none; }
+  .modal-drawer { width: 100%; padding: 40px 24px; }
+  .modal-metrics-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================
+   SITE NAV — always visible, fixed top, high priority
+   ============================================================ */
+.site-nav {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: 72px !important;
+  z-index: 10000 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: rgba(242, 237, 228, 0.92) !important;
+  backdrop-filter: blur(14px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(14px) saturate(140%) !important;
+  border-bottom: 1px solid rgba(20, 18, 16, 0.1) !important;
+  transform: translateY(0) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  transition: background 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.site-nav.is-ready {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+.site-nav.is-scrolled {
+  background: rgba(242, 237, 228, 0.97) !important;
+  box-shadow: 0 10px 30px rgba(20, 18, 16, 0.08) !important;
+}
+
+.site-nav-inner {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.site-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+}
+
+.site-nav-logo {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none !important;
+  border: none !important;
+  color: #141210 !important;
+  flex-shrink: 0;
+}
+
+.site-nav-mark {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: #ff5a1f;
+  flex-shrink: 0;
+}
+
+.site-nav-name {
+  font-family: "JetBrains Mono", "Courier New", monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #141210 !important;
+}
+
+.site-nav-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(20, 18, 16, 0.12);
+  background: rgba(20, 18, 16, 0.04);
+  font-family: "JetBrains Mono", "Courier New", monospace;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: #141210 !important;
+  white-space: nowrap;
+}
+
+.site-nav-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+  animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.0); }
+  50% { box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.18); }
+}
+
+.site-nav-sep { opacity: 0.45; }
+.site-nav-time { color: #ff5a1f !important; font-weight: 700; }
+
+.site-nav-links {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  max-width: 60%;
+}
+
+.site-nav-links::-webkit-scrollbar { display: none; }
+
+.site-nav-links a {
+  display: inline-flex !important;
+  align-items: center;
+  padding: 8px 12px;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none !important;
+  border: none !important;
+  border-radius: 999px;
+  color: rgba(20, 18, 16, 0.72) !important;
+  white-space: nowrap;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.site-nav-links a:hover,
+.site-nav-links a.is-active {
+  color: #141210 !important;
+  background: rgba(20, 18, 16, 0.06);
+}
+
+.site-nav-links a.is-active {
+  box-shadow: inset 0 -2px 0 #ff5a1f;
+}
+
+/* Make sure page content starts BELOW the fixed nav */
+.immersive-content {
+  padding-top: 88px !important;
+}
+
+.site-shell > main,
+.page-content,
+.immersive-content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Kill any old nav/sidebar leftovers that could cover the new nav */
+.left-sidebar,
+.explore-sidebar,
+.side-nav,
+aside.sidebar {
+  display: none !important;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .site-nav { height: 64px !important; }
+  .site-nav-inner { padding: 0 14px; gap: 10px; }
+  .site-nav-status { display: none !important; }
+  .site-nav-links { max-width: 70%; }
+  .site-nav-links a { padding: 8px 10px; font-size: 11px; }
+  .immersive-content { padding-top: 76px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-nav-dot { animation: none !important; }
+}
