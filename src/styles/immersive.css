@@ -845,3 +845,68 @@ aside.sidebar {
 @media (prefers-reduced-motion: reduce) {
   .site-nav-dot { animation: none !important; }
 }
+/* Final Append to immersive.css */
+
+/* Hide Custom Cursor on Touch Devices entirely */
+@media (hover: none) and (pointer: coarse) {
+  .cursor-dot, .cursor-ring {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+  }
+}
+
+/* Ensure body doesn't overflow horizontally on mobile */
+html, body {
+  overflow-x: hidden !important;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* Perfect Chapter Spacing */
+.chapter {
+  padding: 100px 6vw 80px !important;
+}
+
+/* Mobile Polish */
+@media (max-width: 768px) {
+  .chapter {
+    padding: 80px 5vw 60px !important;
+  }
+  
+  .hero-name {
+    font-size: clamp(2.5rem, 10vw, 3.5rem) !important;
+    margin-bottom: 16px !important;
+  }
+  
+  .hero-tagline {
+    font-size: 1.2rem !important;
+  }
+  
+  .projects-grid, .telemetry-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .site-nav-inner {
+    padding: 0 16px !important;
+  }
+
+  .site-nav-name {
+    font-size: 12px !important;
+  }
+}
+
+/* Ensure modals are beautifully centered on all screens */
+.modal-drawer {
+  max-width: 100% !important;
+  width: 600px !important;
+}
+
+@media (max-width: 600px) {
+  .modal-drawer {
+    padding: 40px 20px !important;
+  }
+  .modal-title {
+    font-size: 2rem !important;
+  }
+}

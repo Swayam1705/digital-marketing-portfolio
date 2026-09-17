@@ -20,7 +20,7 @@ export default function GlobalImmersiveCanvas() {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5); // Cap DPR at 1.5 for performance
       const w = window.innerWidth;
       const h = window.innerHeight;
       canvas.width = Math.floor(w * dpr);
@@ -33,15 +33,15 @@ export default function GlobalImmersiveCanvas() {
     };
 
     const initParticles = (w, h, mobile) => {
-      const density = mobile ? 0.00004 : 0.00008; // LOWER density = NO lag
-      const count = Math.min(80, Math.max(30, Math.floor(w * h * density)));
+      // Strict particle limits: ~35 on mobile, ~70 on desktop
+      const count = mobile ? 35 : 70;
       const arr = new Array(count);
       for (let i = 0; i < count; i++) {
         arr[i] = {
           x: Math.random() * w, y: Math.random() * h,
           vx: 0, vy: 0,
           bx: Math.random(), by: Math.random(),
-          r: 0.8 + Math.random() * 1.2,
+          r: 1.0 + Math.random() * 1.5,
           seed: Math.random() * Math.PI * 2,
         };
       }
@@ -53,10 +53,10 @@ export default function GlobalImmersiveCanvas() {
 
     resize();
     window.addEventListener("resize", resize);
-    window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("mouseleave", onLeave);
+    // Use pointer events for better mobile/laptop crossover performance
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerleave", onLeave);
 
-    // BONE & EMBER palette (Pre-formatted strings for speed)
     const bgTopStr = "rgb(242, 237, 228)";
     const bgBotStr = "rgb(232, 224, 210)";
     const inkRGB = "20, 18, 16";
@@ -65,18 +65,20 @@ export default function GlobalImmersiveCanvas() {
     let last = performance.now();
 
     const render = (now) => {
-      const dt = Math.min(32, now - last) / 1000; // Cap dt to prevent physics explosions
+      // Cap delta time to prevent physics glitches if tab is backgrounded
+      const dt = Math.min(32, now - last) / 1000;
       last = now;
       const p = progressRef.current;
       const { w, h } = dimsRef.current;
 
-      // Fill background (fast)
+      // 1. Fast Background Fill
       const g = ctx.createLinearGradient(0, 0, 0, h);
       g.addColorStop(0, bgTopStr);
       g.addColorStop(1, bgBotStr);
       ctx.fillStyle = g;
       ctx.fillRect(0, 0, w, h);
 
+      // 2. Smooth Mouse Interpolation
       const m = mouseRef.current;
       if (m.tx !== -9999) {
         m.x += (m.tx - m.x) * 0.15;
@@ -86,34 +88,29 @@ export default function GlobalImmersiveCanvas() {
       const P = particlesRef.current;
       const N = P.length;
 
-      // Phase calculation (Simplified for speed)
-      const p1 = Math.max(0, Math.min(1, p * 3));       // 0 to 0.33
-      const p2 = Math.max(0, Math.min(1, (p-0.33)*3));  // 0.33 to 0.66
-      const p3 = Math.max(0, Math.min(1, (p-0.66)*3));  // 0.66 to 1.0
+      // Phase calculation
+      const p1 = Math.max(0, Math.min(1, p * 3));
+      const p2 = Math.max(0, Math.min(1, (p-0.33)*3));
+      const p3 = Math.max(0, Math.min(1, (p-0.66)*3));
 
+      // 3. Physics & Target Calculations
       for (let i = 0; i < N; i++) {
         const pt = P[i];
-        
-        // Base drift
         let tx = pt.bx;
         let ty = pt.by;
 
-        // Evolve coordinates based on progress (cleaner math)
         if (p < 0.33) {
-          // Vortex
           const a = pt.seed + p1 * 3;
           const r = 0.2 + 0.1 * Math.sin(pt.seed * 3);
           tx = tx * (1-p1) + (0.5 + Math.cos(a) * r) * p1;
           ty = ty * (1-p1) + (0.5 + Math.sin(a) * r * 0.8) * p1;
         } else if (p < 0.66) {
-          // Grid / Stream
           const cols = isMobile ? 4 : 8;
           const gx = 0.1 + ((i % cols) / (cols - 1)) * 0.8;
           const gy = 0.2 + (Math.floor(i / cols) / 5) * 0.6;
           tx = tx * (1-p2) + gx * p2;
           ty = ty * (1-p2) + gy * p2;
         } else {
-          // Orbit / Settle
           const a = pt.seed + now * 0.0005;
           const r = 0.1 + 0.05 * Math.sin(pt.seed * 2);
           tx = tx * (1-p3) + (0.5 + Math.cos(a) * r) * p3;
@@ -123,52 +120,50 @@ export default function GlobalImmersiveCanvas() {
         const targetX = tx * w;
         const targetY = ty * h;
         
-        pt.vx += (targetX - pt.x) * 1.2 * dt;
-        pt.vy += (targetY - pt.y) * 1.2 * dt;
+        pt.vx += (targetX - pt.x) * 1.5 * dt;
+        pt.vy += (targetY - pt.y) * 1.5 * dt;
 
-        // Ambient drift
-        pt.vx += Math.cos(pt.seed + now * 0.001) * 0.15;
-        pt.vy += Math.sin(pt.seed + now * 0.001) * 0.15;
+        pt.vx += Math.cos(pt.seed + now * 0.001) * 0.2;
+        pt.vy += Math.sin(pt.seed + now * 0.001) * 0.2;
 
-        // Mouse Repulsion (Optimized - no square root)
+        // Repulsion
         if (m.x !== -9999) {
           const dx = pt.x - m.x;
           const dy = pt.y - m.y;
           const d2 = dx * dx + dy * dy;
-          const R2 = 15000; // ~120px radius squared
+          const R2 = 12000;
           if (d2 < R2) {
-            const force = (1 - d2 / R2) * 80 * dt;
-            pt.vx += dx * 0.01 * force;
-            pt.vy += dy * 0.01 * force;
+            const force = (1 - d2 / R2) * 60 * dt;
+            pt.vx += dx * 0.015 * force;
+            pt.vy += dy * 0.015 * force;
           }
         }
 
-        pt.vx *= 0.88; // Friction
-        pt.vy *= 0.88;
+        pt.vx *= 0.85; 
+        pt.vy *= 0.85;
         pt.x += pt.vx;
         pt.y += pt.vy;
 
-        // Wrap edges safely
         if (pt.x < -20) pt.x = w + 20;
         if (pt.x > w + 20) pt.x = -20;
         if (pt.y < -20) pt.y = h + 20;
         if (pt.y > h + 20) pt.y = -20;
       }
 
-      // Fast connection drawing
+      // 4. Fast Connection Drawing (Capped to max 6 neighbors to prevent lag)
       if (!reduced) {
-        const D2 = isMobile ? 8000 : 14000; // Squared distance threshold
-        ctx.lineWidth = 0.6;
+        const D2 = isMobile ? 6000 : 12000;
+        ctx.lineWidth = 0.5;
         for (let i = 0; i < N; i++) {
           const a = P[i];
-          // Limit inner loop to max 10 neighbors to prevent O(N^2) lag spikes
-          for (let j = i + 1; j < i + 10 && j < N; j++) {
+          const maxNeighbors = Math.min(i + 6, N); // Strict loop cap
+          for (let j = i + 1; j < maxNeighbors; j++) {
             const b = P[j];
             const dx = a.x - b.x;
             const dy = a.y - b.y;
             const d2 = dx * dx + dy * dy;
             if (d2 < D2) {
-              const alpha = (1 - d2 / D2) * 0.35;
+              const alpha = (1 - d2 / D2) * 0.3;
               ctx.strokeStyle = `rgba(${inkRGB}, ${alpha})`;
               ctx.beginPath();
               ctx.moveTo(a.x, a.y);
@@ -179,11 +174,11 @@ export default function GlobalImmersiveCanvas() {
         }
       }
 
-      // Draw nodes
+      // 5. Draw Nodes
       for (let i = 0; i < N; i++) {
         const pt = P[i];
-        const isEmber = i % 8 === 0;
-        ctx.fillStyle = `rgba(${isEmber ? emberRGB : inkRGB}, 0.8)`;
+        const isEmber = i % 7 === 0;
+        ctx.fillStyle = `rgba(${isEmber ? emberRGB : inkRGB}, 0.85)`;
         ctx.beginPath();
         ctx.arc(pt.x, pt.y, pt.r, 0, Math.PI * 2);
         ctx.fill();
@@ -196,8 +191,8 @@ export default function GlobalImmersiveCanvas() {
 
     return () => {
       window.removeEventListener("resize", resize);
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("mouseleave", onLeave);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerleave", onLeave);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
   }, []);

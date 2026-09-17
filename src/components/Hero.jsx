@@ -24,7 +24,7 @@ export default function Hero() {
           id="hero-heading"
           className="hero__name hero__anim hero__anim--2"
         >
-          NAME
+          SAMRUDDHI SHUKLA
         </h1>
 
         <p className="hero__tagline hero__anim hero__anim--3">
